@@ -7,5 +7,6 @@ class Solution:
             x = -1 * heapq.heappop(nums)
             x = int(math.sqrt(x))
             heapq.heappush(nums , -1 * x)
-
-        return -1 * sum(nums)
+        ans =  -1 * sum(nums)
+        del  nums
+        return ans
