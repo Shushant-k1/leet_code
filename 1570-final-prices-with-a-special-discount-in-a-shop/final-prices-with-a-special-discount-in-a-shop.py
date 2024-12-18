@@ -4,9 +4,8 @@ class Solution:
         n = len(prices)
         st = [prices[-1]]
         for i in range( n - 2 , -1 , -1 ) :
-            if st[-1] > prices[i] :
-                while st and st[-1] > prices[i] :
-                    st.pop() 
+            while st and st[-1] > prices[i] :
+                st.pop() 
             if st :
                 next_small.append(prices[i] - st[-1])
             else :
