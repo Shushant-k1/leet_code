@@ -15,8 +15,6 @@ class Solution:
             return -1
         
         _cost = [float('inf')] * n
-
-
         dq = deque()
         dq.append([k,  0])
         _cost[k - 1]  = 0
@@ -28,6 +26,6 @@ class Solution:
                     if cost + wei <  _cost[neigh - 1] :
                         _cost[neigh-1] = cost + wei
                         dq.append([neigh , cost + wei])
-        print(_cost)
+
         return -1 if max(_cost) == float('inf') else max(_cost)
 
