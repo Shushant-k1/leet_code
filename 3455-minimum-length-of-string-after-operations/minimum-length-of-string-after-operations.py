@@ -7,7 +7,7 @@ class Solution:
         
         
         ans = 0
-        print(freq)
+
         for fre in freq :
 
             if fre & 1 : 
