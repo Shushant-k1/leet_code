@@ -1,20 +1,18 @@
 class Solution:
     def minimumLength(self, s: str) -> int:
-        d = {}
+        freq = [0] * 26
         n = len(s)
         for char in s :
-            if char in d :
-                d[char] += 1
-            else :
-                d[char] = 1
+            freq[ord(char) - ord("a")] += 1
+        
         
         ans = 0
+        print(freq)
+        for fre in freq :
 
-        for freq in d :
-
-            if d[freq] & 1 : 
+            if fre & 1 : 
                 ans += 1
-            else :
+            elif fre != 0:
                 ans += 2
 
         return ans
