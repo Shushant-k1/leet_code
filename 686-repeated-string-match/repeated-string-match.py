@@ -17,8 +17,7 @@ class Solution:
 
     def rabinkarp(self, a, b):
         n, m = len(a), len(b)
-        if n < m:
-            return False
+
 
         base = 256
         mod = 10**9 + 7
