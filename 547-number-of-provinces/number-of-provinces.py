@@ -1,29 +1,37 @@
 class Solution:
     def adj_mat(self , graph) :
-        adj = { }
-        for i in range(len(graph)) :
-            cur = []
-            for j in range(len(graph)) :
+
+        adj = []
+        n , m = len(graph) , len(graph[0])
+        for i in range(n) :
+            temp = []
+            for j in range(m) :
                 if graph[i][j] == 1  and i != j:
-                    cur.append(j)
-            adj[i] = cur
+                    temp.append(j)
+            adj.append(temp)
+        
         return adj
+            
+
 
     def findCircleNum(self, isConnected: List[List[int]]) -> int:
-        _adj_mat = self.adj_mat(isConnected)
-        ans = 0
+        adj = self.adj_mat( isConnected)
+        print(adj)
         vis = set()
-        for i in range(len(isConnected)) :
+        cnt = 0
+        for i in range(len(adj)) :
             if i not in vis :
                 vis.add(i)
-                ans += 1
-                self.dfs( i , _adj_mat , vis)
-        return ans
+                cnt += 1
+                self.dfs( i , adj , vis)
+        return cnt
+
         
     def dfs(self , node , graph , vis) :
-        vis.add(node)
+
         for neigh in graph[node] :
             if neigh not in vis :
+                vis.add(neigh)
                 self.dfs(neigh , graph , vis)
-
+        
 
