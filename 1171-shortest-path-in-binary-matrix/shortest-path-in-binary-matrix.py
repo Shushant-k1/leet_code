@@ -1,32 +1,33 @@
+from collections import deque
+from typing import List
+
 class Solution:
     def shortestPathBinaryMatrix(self, grid: List[List[int]]) -> int:
-        
         n = len(grid)
-        m = len(grid[0])
-        if grid[n-1][n-1] == 1 or grid[0][0] == 1 :
+        if grid[0][0] == 1 or grid[n - 1][n - 1] == 1:
             return -1
+        if n == 1:
+            return 1
 
-        dirs = [(-1 , 0 ), (1 , 0) , (0 , 1) , (0 , -1) , (-1 , -1) , (1 , 1) , (-1 , 1) , (1 , -1)]
+        directions = [(-1, 0), (1, 0), (0, 1), (0, -1),
+                      (-1, -1), (1, 1), (-1, 1), (1, -1)]
 
-        min_dist = 1
+        visited = [[False] * n for _ in range(n)]
+        visited[0][0] = True
 
-        q = deque()
-        q.append((0 , 0))
-        vis = set()
-        vis.add((0 , 0))
+        q = deque([(0, 0)])
+        path_length = 1
 
-        while q :
-            for i in range(len(q)) :
-                x , y = q.popleft()
-                
-                if x == n - 1 and y == n - 1 :
-                    return min_dist
-                for dr , dy in dirs :
-                    nx , ny = x + dr , y + dy
-                    if 0 <= nx < n and 0 <= ny < m and grid[nx][ny] == 0 and (nx , ny) not in vis:
-                        q.append((nx ,  ny))
-                        vis.add((nx , ny))
-            min_dist += 1
-        
+        while q:
+            for _ in range(len(q)):
+                x, y = q.popleft()
+                for dx, dy in directions:
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < n and 0 <= ny < n and not visited[nx][ny] and grid[nx][ny] == 0:
+                        if nx == n - 1 and ny == n - 1:
+                            return path_length + 1
+                        visited[nx][ny] = True
+                        q.append((nx, ny))
+            path_length += 1
+
         return -1
-        
