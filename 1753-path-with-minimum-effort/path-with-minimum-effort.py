@@ -15,7 +15,8 @@ class Solution:
             cur_effort , x , y = heapq.heappop(heap)
             if x == n -1 and y == m - 1 :
                 return cur_effort
-            
+            if cur_effort > effort[x][y]:
+                continue
             for dx , dy in dirs :
                 nx , ny = dx + x , dy + y
                 if (0 <= nx < n ) and (0 <= ny < m) :
