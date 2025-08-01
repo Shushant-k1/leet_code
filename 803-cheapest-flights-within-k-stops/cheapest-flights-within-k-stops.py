@@ -1,34 +1,25 @@
-import heapq
-from typing import List
+from collections import deque
 
 class Solution:
-    def findCheapestPrice(self, n: int, flights: List[List[int]],
-                          src: int, dst: int, k: int) -> int:
-
+    def findCheapestPrice(self, n, flights, src, dst, k):
         adj = [[] for _ in range(n)]
         for u, v, cost in flights:
             adj[u].append((v, cost))
 
-        # (total_cost, node, stops)
-        heap = [(0, src, 0)]
-        
-        # cost[node][stops] = minimum cost to reach `node` with `stops`
-        cost_matrix = [ [float('inf')] * (k + 2) for _ in range(n) ]
-        cost_matrix[src][0] = 0
+        q = deque()
+        q.append((src, 0, 0))  # (node, cost, stops)
+        min_cost = [float('inf')] * n
+        min_cost[src] = 0
 
-        while heap:
-            total_cost, node, stops = heapq.heappop(heap)
-
-            if node == dst:
-                return total_cost
+        while q:
+            node, cost, stops = q.popleft()
 
             if stops > k:
                 continue
 
             for neighbor, price in adj[node]:
-                next_cost = total_cost + price
-                if next_cost < cost_matrix[neighbor][stops + 1]:
-                    cost_matrix[neighbor][stops + 1] = next_cost
-                    heapq.heappush(heap, (next_cost, neighbor, stops + 1))
+                if cost + price < min_cost[neighbor]:
+                    min_cost[neighbor] = cost + price
+                    q.append((neighbor, cost + price, stops + 1))
 
-        return -1
+        return min_cost[dst] if min_cost[dst] != float('inf') else -1
