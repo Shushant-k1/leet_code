@@ -1,35 +1,48 @@
+from collections import defaultdict
 import heapq
-from typing import List
 
 class Solution:
     def countPaths(self, n: int, roads: List[List[int]]) -> int:
         mod = 10 ** 9 + 7
-        adj = [[] for _ in range(n)]
-        for u, v, t in roads:
-            adj[u].append((v, t))
-            adj[v].append((u, t))
+        adj = self.adj_mat(n, roads)
+        min_cost = self.dijkstra(adj, n)
 
-        min_cost = [float('inf')] * n
         ways = [0] * n
-        min_cost[0] = 0
         ways[0] = 1
 
-        heap = [(0, 0)]  # (cost, node)
+        heap = [(min_cost[0], 0)]  # (cost, node)
 
         while heap:
-            cost, u = heapq.heappop(heap)
+            cost, node = heapq.heappop(heap)
 
-            if cost > min_cost[u]:
-                continue
-
-            for v, t in adj[u]:
-                new_cost = cost + t
-
-                if new_cost < min_cost[v]:
-                    min_cost[v] = new_cost
-                    ways[v] = ways[u]
-                    heapq.heappush(heap, (new_cost, v))
-                elif new_cost == min_cost[v]:
-                    ways[v] = (ways[v] + ways[u]) % mod
+            for neigh, edge_cost in adj[node]:
+                if min_cost[node] + edge_cost == min_cost[neigh]:
+                    if ways[neigh] == 0:  # push only first time
+                        heapq.heappush(heap, (min_cost[neigh], neigh))
+                    ways[neigh] = (ways[neigh] + ways[node]) % mod
 
         return ways[n - 1]
+
+    def dijkstra(self, adj, n):
+        min_cost = [float('inf')] * n
+        min_cost[0] = 0
+        heap = [(0, 0)]
+
+        while heap:
+            cost, node = heapq.heappop(heap)
+            if cost > min_cost[node]:
+                continue
+            for neigh, c in adj[node]:
+                new_cost = cost + c
+                if new_cost < min_cost[neigh]:
+                    min_cost[neigh] = new_cost
+                    heapq.heappush(heap, (new_cost, neigh))
+
+        return min_cost
+
+    def adj_mat(self, n, roads):
+        adj = [[] for _ in range(n)]
+        for u, v, time in roads:
+            adj[u].append((v, time))
+            adj[v].append((u, time))
+        return adj
