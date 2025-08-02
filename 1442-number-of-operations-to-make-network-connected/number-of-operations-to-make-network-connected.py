@@ -1,30 +1,26 @@
 class Solution:
     def makeConnected(self, n: int, connections: List[List[int]]) -> int:
+        if len(connections) < n - 1:
+            return -1  # Not enough cables to connect all computers
         
-        if len(connections) < n-1 :
-            return  - 1 
+        parent = list(range(n))
 
-        adj = [[] for i in range(n)]
+        def find(x):
+            if parent[x] != x:
+                parent[x] = find(parent[x])  # Path compression
+            return parent[x]
 
-        for u , v in connections :
-            adj[u].append(v)
-            adj[v].append(u)
-        
-        vis = set()
+        def union(x, y):
+            rootX = find(x)
+            rootY = find(y)
+            if rootX != rootY:
+                parent[rootY] = rootX  # Merge components
 
-        cnt = 0
-        for i in range(n) :
-            if i not in vis:
-                self.dfs(i , adj , -1 , vis)
-                cnt += 1
-        
-        return cnt - 1
-        
-        
-    def dfs(self , node , adj , par ,vis) :
-        
-        vis.add(node)
-        
-        for neigh in adj[node] :
-            if neigh not in vis :
-                self.dfs(neigh , adj ,node ,vis)
+        for u, v in connections:
+            union(u, v)
+
+        # Count unique roots
+        components = sum(1 for i in range(n) if find(i) == i)
+
+        # We need (components - 1) operations to connect them
+        return components - 1
