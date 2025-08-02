@@ -1,41 +1,37 @@
 class Solution:
     def largestIsland(self, grid: List[List[int]]) -> int:
-        
-        d = {}
+        n = len(grid)
         component = 2
         count = {}
-        n = len(grid)
-        vis = set()
-        for i in range(n) :
-            for j in range(n) :
-                if grid[i][j] == 1 and (i , j ) not in vis:
-                    cnt = self.dfs(i , j , vis, grid , d , component)
-                    count[component] = cnt
-                    component += 1
-        ans = 0
-        for i in range(n) :
-            for j in range(n) :
-                if grid[i][j] == 0  :
-                    temp = 0
-                    se = set()
-                    for x , y in [(-1 , 0) , (1 , 0) , (0 , 1) , (0 , -1)] :
-                        if 0 <= x + i < len(grid) and 0 <= y + j < len(grid) and (x + i , y + j) in d:
-                            se.add((d[(i+x , y+ j)]))
-                    temp = 0
-                    for k in se :
-                        temp += count[k]
-                    ans = max(ans , temp + 1)
-                            
-                    
-        return ans if len(count) == 0 else max(ans , count[2])
 
-    def dfs(self , i , j , vis , grid , d,component) :
-        
-        vis.add((i , j))
-        d[(i , j)]  = component
+        # Label all components directly in the grid
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 1:
+                    count[component] = self.dfs(i, j, grid, component)
+                    component += 1
+
+        ans = max(count.values(), default=0)  # case when grid is all 1's or 0's
+
+        # Try flipping every 0 to 1 and check connected components
+        for i in range(n):
+            for j in range(n):
+                if grid[i][j] == 0:
+                    seen = set()
+                    for dx, dy in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
+                        ni, nj = i + dx, j + dy
+                        if 0 <= ni < n and 0 <= nj < n and grid[ni][nj] > 1:
+                            seen.add(grid[ni][nj])
+                    temp = 1 + sum(count[k] for k in seen)
+                    ans = max(ans, temp)
+
+        return ans
+
+    def dfs(self, i, j, grid, component):
+        grid[i][j] = component
         cnt = 1
-        for x , y in [(-1 , 0) , (1 , 0) , (0 , 1) , (0 , -1)] :
-            if 0 <= x + i < len(grid) and 0 <= y + j < len(grid) and grid[x+i][y+j] == 1 and (i + x , j+y) not in vis:
-                
-                cnt += self.dfs(i +x , j + y  , vis , grid , d,component)
+        for dx, dy in [(-1, 0), (1, 0), (0, 1), (0, -1)]:
+            ni, nj = i + dx, j + dy
+            if 0 <= ni < len(grid) and 0 <= nj < len(grid) and grid[ni][nj] == 1:
+                cnt += self.dfs(ni, nj, grid, component)
         return cnt
