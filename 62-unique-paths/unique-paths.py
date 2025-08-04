@@ -1,17 +1,20 @@
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
 
-        return self.helper(m , n , {})
+        # return self.helper(m , n , {})
 
-    
+        dp = [[0 for i in range(n )] for j in range(m )]
 
-    def helper(self , m , n , dp) :
+        for i in range(m) :
+            dp[i][0] = 1
+        
+        for i in range(n) :
+            dp[0][i] = 1
+        
 
-        if m == 1 and n == 1 : return 1
+        for i in range(1 ,m) :
+            for j in range(1 , n) :
+                    dp[i][j] = dp[i -1][j] + dp[i][j -1]
+        
+        return dp[m-1][n-1]
 
-        if m  <= 0  or n <= 0 : return 0
-        if (m , n ) in dp : return dp[(m ,n)]
-
-        dp[(m , n)] =  self.helper(m  , n - 1 , dp) + self.helper(m - 1 , n , dp)
-
-        return dp[(m , n)]
