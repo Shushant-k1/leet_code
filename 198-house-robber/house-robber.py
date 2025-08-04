@@ -5,11 +5,10 @@ class Solution:
 
         dp = [float('-inf') for i in range(len(nums))]
 
-        dp[0] = nums[0]
-        dp[1] = max(nums[0] , nums[1])
+        a,  b  = nums[0] , max(nums[0] , nums[1])
 
         for i in range(2 , n)  :
-            dp[i] = max(dp[i-2] + nums[i] , dp[i-1])
+            a , b = b , max(a + nums[i] , b)
         
-        return dp[-1]
+        return b
 
