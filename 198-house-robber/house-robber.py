@@ -1,15 +1,15 @@
 class Solution:
     def rob(self, nums: List[int]) -> int:
+        n = len(nums)
+        if n == 1 : return nums[0]
+
+        dp = [float('-inf') for i in range(len(nums))]
+
+        dp[0] = nums[0]
+        dp[1] = max(nums[0] , nums[1])
+
+        for i in range(2 , n)  :
+            dp[i] = max(dp[i-2] + nums[i] , dp[i-1])
         
-        return self.helper(nums , 0 , {})
-    
+        return dp[-1]
 
-
-    def helper(self , nums  , cur  , dp) :
-
-        if cur >= len(nums) : return 0
-        if cur in dp  : return dp[cur]
-
-        dp[cur] =  max(self.helper(nums , cur + 2 , dp) + nums[cur] , self.helper(nums , cur + 1 , dp))
-
-        return dp[cur]
