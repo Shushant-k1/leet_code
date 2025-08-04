@@ -18,22 +18,8 @@ class Solution:
                 for step in range(k -1 , k + 2) :
                     if step and stones[i]  + step in dp :
                         dp[stones[i] + step].add(step)
+                        if stones[i] + step == stones[-1] : return True
         
         return len(dp[stones[-1]]) > 0
     
-    def helper(self , d , cur  , k  , end , dp) :
-
-        if cur == end : return True
-        if (cur , k) in dp : return dp[(cur , k )]
-
-        if cur not in d :  return False
-
-        for i in (k - 1 , k + 1 , k) :
-            if i > 0 :
-                if self.helper(d , cur + i, i , end  , dp) : 
-                    dp[(cur , k)] = True
-                    return True
-        dp[(cur , k)] = False
-        return dp[(cur , k)]
-
-        
+    
