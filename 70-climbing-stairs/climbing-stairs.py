@@ -1,14 +1,10 @@
 class Solution:
     def climbStairs(self, n: int) -> int:
-        return self.helper(n , {})
+        if n == 1 : return 1
         
- 
+        a , b  = 1 , 2
 
+        for i in range(2 , n) :
+            a , b = b , a + b
         
-    def helper(self , n , dp) :
-        if n == 0 : return 1
-        if n < 0 : return 0
-        if n in dp : return dp[n]
-
-        dp[n] =  self.helper(n - 1 , dp) + self.helper(n -2 , dp)
-        return dp[n]
+        return b
