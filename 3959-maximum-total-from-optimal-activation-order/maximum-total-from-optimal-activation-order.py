@@ -24,7 +24,6 @@ class Solution:
                     active_count = 0
                 else :
                     active_count = i - j  
-                
             else:
                 i += 1
 
